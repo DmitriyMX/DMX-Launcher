@@ -14,12 +14,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.Enumeration;
 import java.util.Formatter;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -126,9 +128,21 @@ public class OnlineModeThread extends GameModeThread {
         }
     }
 
+    private void writeToFile(FileOutputStream fileOutputStream,
+                             InputStream inputStream,
+                             ProgressFunc progress) throws IOException {
+        byte[] buffer = new byte[DPack.MAX_BUFFER];
+        int n;
+        while ((n = inputStream.read(buffer)) > 0) {
+            fileOutputStream.write(buffer, 0, n);
+            progress.progress(n);
+        }
+        fileOutputStream.flush();
+    }
+
     private void DownloadClient(boolean[] check) {
-        /** Подсчет скачиваемых файлов */
-        int totalDownloadBytes = 0;
+        // Подсчет скачиваемых файлов
+        final AtomicInteger totalDownloadBytes = new AtomicInteger(0);
         DHttpConnection http;
         try {
             for (int i = 0; i < Config.MINECRAFT_JARS.length; i++) {
@@ -137,7 +151,7 @@ public class OnlineModeThread extends GameModeThread {
                     http.getRequest().setMethod("HEAD");
                     http.sendRequestHeader();
                     if (http.getResponse().getStatus() == 200) {
-                        totalDownloadBytes += Integer.parseInt(http.getResponse().getHeader().get("Content-Length"));
+                        totalDownloadBytes.addAndGet(Integer.parseInt(http.getResponse().getHeader().get("Content-Length")));
                     }
                     http.close();
                 }
@@ -147,7 +161,7 @@ public class OnlineModeThread extends GameModeThread {
                 http.getRequest().setMethod("HEAD");
                 http.sendRequestHeader();
                 if (http.getResponse().getStatus() == 200) {
-                    totalDownloadBytes += Integer.parseInt(http.getResponse().getHeader().get("Content-Length"));
+                    totalDownloadBytes.addAndGet(Integer.parseInt(http.getResponse().getHeader().get("Content-Length")));
                 }
                 http.close();
             }
@@ -155,11 +169,18 @@ public class OnlineModeThread extends GameModeThread {
             log.error("Download client", e);
         }
 
-        /** Загрузка */
+        // Загрузка
         int progressPart = 25;
         int progressStart = 50;
-        int currentDownloadBytes = 0;
+        final AtomicInteger currentDownloadBytes = new AtomicInteger(0);
         new File(Config.MINECRAFT_BINPATH).mkdirs();
+
+        ProgressFunc progressFunc = readBytes -> {
+            int percent = currentDownloadBytes.addAndGet(readBytes) * 100 / totalDownloadBytes.get();
+            float mainProgress = ((float) percent / (float) 100) * (float) progressPart;
+            progressDialog.progressBar.setValue(progressStart + (int) mainProgress);
+        };
+
         try {
             for (int i = 0; i < Config.MINECRAFT_JARS.length; i++) {
                 if (((!check[0]) && (i == 0)) || ((!check[1]) && (i > 0))) {
@@ -168,19 +189,11 @@ public class OnlineModeThread extends GameModeThread {
                     http.getRequest().setMethod("GET");
                     http.sendRequestHeader();
                     DResponse resp = http.getResponse();
-                    FileOutputStream fos = new FileOutputStream(new File(Config.MINECRAFT_BINPATH,
-                                                                         Config.MINECRAFT_JARS[i]));
-                    byte[] buffer = new byte[DPack.MAX_BUFFER];
-                    int n;
-                    while ((n = resp.getBody().read(buffer)) > 0) {
-                        fos.write(buffer, 0, n);
-                        fos.flush();
-                        currentDownloadBytes += n;
-                        int percent = currentDownloadBytes * 100 / totalDownloadBytes;
-                        float mainProgress = ((float) percent / (float) 100) * (float) progressPart;
-                        progressDialog.progressBar.setValue(progressStart + (int) mainProgress);
+                    try (FileOutputStream fos = new FileOutputStream(new File(Config.MINECRAFT_BINPATH,
+                                                                         Config.MINECRAFT_JARS[i]))) {
+
+                        writeToFile(fos, resp.getBody(), progressFunc);
                     }
-                    fos.close();
                     http.close();
                 }
             }
@@ -191,18 +204,9 @@ public class OnlineModeThread extends GameModeThread {
                 http.sendRequestHeader();
                 DResponse resp = http.getResponse();
                 File file = new File(Config.MINECRAFT_BINPATH, Config.NATIVE_LIBRARY);
-                FileOutputStream fos = new FileOutputStream(file);
-                byte[] buffer = new byte[DPack.MAX_BUFFER];
-                int n;
-                while ((n = resp.getBody().read(buffer)) > 0) {
-                    fos.write(buffer, 0, n);
-                    fos.flush();
-                    currentDownloadBytes += n;
-                    int percent = currentDownloadBytes * 100 / totalDownloadBytes;
-                    float mainProgress = ((float) percent / (float) 100) * (float) progressPart;
-                    progressDialog.progressBar.setValue(progressStart + (int) mainProgress);
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    writeToFile(fos, resp.getBody(), progressFunc);
                 }
-                fos.close();
                 http.close();
 
                 progressDialog.setStatus("<b>Распаковка: </b>" + Config.NATIVE_LIBRARY + " ...");
@@ -215,24 +219,25 @@ public class OnlineModeThread extends GameModeThread {
                             .getName());
                     destinationFilePath.getParentFile().mkdirs();
                     log.info("Extracting {}", destinationFilePath);
-                    InputStream is = zipFile.getInputStream(entry);
-                    fos = new FileOutputStream(destinationFilePath);
-                    while ((n = is.read(buffer)) > 0) {
-                        fos.write(buffer, 0, n);
+                    try (InputStream is = zipFile.getInputStream(entry);
+                         FileOutputStream fos = new FileOutputStream(destinationFilePath)) {
+                        byte[] buffer = new byte[DPack.MAX_BUFFER];
+                        int n;
+                        while ((n = is.read(buffer)) > 0) {
+                            fos.write(buffer, 0, n);
+                        }
                     }
-                    fos.close();
-                    is.close();
                 }
             }
         } catch (Exception e) {
-
+            log.error("", e);
         }
     }
 
     private boolean[] CheckSumClient(boolean[] check) {
         StringBuilder postdata = new StringBuilder();
 
-        /** Подсчитываем MD5 сумму для minecraft.jar */
+        // Подсчитываем MD5 сумму для minecraft.jar
         if (check[0]) {
             log.info("Minecraft MD5...");
             postdata.append(getMD5(new File(Config.MINECRAFT_BINPATH, Config.MINECRAFT_JARS[0])));
@@ -240,7 +245,7 @@ public class OnlineModeThread extends GameModeThread {
             postdata.append("0");
         }
 
-        /** Подсчитываем CRC32 сумму для библиотек */
+        // Подсчитываем CRC32 сумму для библиотек
         if (check[1]) {
             log.info("Libs CRC32...");
             CRC32 crc32 = new CRC32();
@@ -269,7 +274,7 @@ public class OnlineModeThread extends GameModeThread {
             postdata.append(":0");
         }
 
-        /** Отправляем данные на сервер */
+        // Отправляем данные на сервер
         try {
             DHttpConnection http = new DHttpConnection(new DUrl(Config.URL_MINE_CHECK));
             DRequest req = http.getRequest();
@@ -306,7 +311,7 @@ public class OnlineModeThread extends GameModeThread {
             DigestInputStream dis = new DigestInputStream(bis, algorithm);
 
             // read the file and update the hash calculation
-            while (dis.read() != -1) { ; }
+            while (dis.read() != -1) { ; } //TODO WTF???
 
             // get the hash value as byte array
             byte[] hash = algorithm.digest();
@@ -321,4 +326,7 @@ public class OnlineModeThread extends GameModeThread {
         return null;
     }
 
+    private interface ProgressFunc {
+        void progress(int readBytes);
+    }
 }

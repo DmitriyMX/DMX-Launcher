@@ -1,5 +1,7 @@
 package ru.dmitriymx.dhttpconnect;
 
+import java.io.InputStream;
+
 /**
  * Заглушка
  */
@@ -12,17 +14,13 @@ public class DResponse {
         return null;
     }
 
-    public UnknownObject getBody() {
+    public InputStream getBody() {
         return null;
     }
 
     public static class UnknownObject {
         public String get(String string) {
             return null;
-        }
-
-        public int read(byte[] bytes) {
-            return 0;
         }
     }
 }
