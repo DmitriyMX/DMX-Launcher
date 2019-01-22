@@ -13,20 +13,20 @@ import java.io.FileWriter;
 public class Config {
 
     public static final int LAUNCHER_VERSION = 13; // 11-05-2012 17:46
-    public static final String WORK_DIR = "dmitriymx";
+    private static final String WORK_DIR = "dmitriymx";
 
-    public static final String URL_CLIENT = "http://mc.dy9.ru/client/";
-    public static final String URL_AUTH = "http://mc.dy9.ru:9001/auth.mc";
-    public static final String URL_MINE_CHECK = "http://mc.dy9.ru:9001/checkmine.mc";
+    static final String URL_CLIENT = "http://mc.dy9.ru/client/";
+    static final String URL_AUTH = "http://mc.dy9.ru:9001/auth.mc";
+    static final String URL_MINE_CHECK = "http://mc.dy9.ru:9001/checkmine.mc";
 
-    public static final String[] MINECRAFT_JARS = {"minecraft.jar", "lwjgl.jar", "lwjgl_util.jar", "jinput.jar"};
+    static final String[] MINECRAFT_JARS = {"minecraft.jar", "lwjgl.jar", "lwjgl_util.jar", "jinput.jar"};
 
     public static final String[] SERVER_NAME = {"Protected Server", "[ OFF-LINE ]"};
     public static final String[] SERVER_IP = {"mc.dy9.ru:25565", ""};
 
-    public static String NATIVE_LIBRARY;
-    public static String MINECRAFT_PATH;
-    public static String MINECRAFT_BINPATH;
+    static String NATIVE_LIBRARY;
+    private static String MINECRAFT_PATH;
+    static String MINECRAFT_BINPATH;
 
     public static int CONF_SERVER_ID = 0;
     public static String CONF_LAST_LOGIN = "";
@@ -35,9 +35,9 @@ public class Config {
     //public static boolean CONF_X64_MODE = false;
     public static int CONF_MULTI_CORE = 1;
 
-    public static void init() {
-        /** MINECRAFT_PATH */
-        /** NATIVE_LIBRARY */
+    static void init() {
+        // MINECRAFT_PATH
+        // NATIVE_LIBRARY
         String userHome = System.getProperty("user.home", ".");
         String osName = System.getProperty("os.name").toLowerCase();
         if (osName.contains("win")) {
@@ -56,17 +56,17 @@ public class Config {
             MINECRAFT_PATH = new File(userHome, WORK_DIR).getPath();
         }
 
-        /** MINECRAFT_BINPATH */
+        // MINECRAFT_BINPATH
         MINECRAFT_BINPATH = MINECRAFT_PATH + File.separator + "bin";
 
-        /** Загрузка параметров */
+        // Загрузка параметров
         LoadConf();
     }
 
     /**
      * Загрузка параметров
      */
-    public static void LoadConf() {
+    private static void LoadConf() {
         File conf = new File(MINECRAFT_PATH, "launcher.conf");
         if (!conf.exists()) {
             return;

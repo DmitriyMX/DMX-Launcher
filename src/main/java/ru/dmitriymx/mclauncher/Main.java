@@ -11,7 +11,7 @@ public class Main {
 
         DbgView();
 
-        /** Основная программа */
+        // Основная программа
         String param = System.getProperty("sess");
         if (param == null) {
             log.info("Start Launcher");

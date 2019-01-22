@@ -73,7 +73,7 @@ public class MinecraftApplet extends Applet implements Runnable, AppletStub, Mou
      * @param userName
      * @param sessionId
      */
-    public void init(String userName, String sessionId) {
+    private void init(String userName, String sessionId) {
         //Чесно говоря, я не уверен, что эти 2 строчки тут нужны
         //это копипаст, который еще предстоит проверить в полноценном лаунчере
         //this.customParameters.put("username", userName);

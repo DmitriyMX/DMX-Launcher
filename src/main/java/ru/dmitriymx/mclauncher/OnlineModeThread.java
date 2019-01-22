@@ -42,7 +42,7 @@ public class OnlineModeThread extends GameModeThread {
         progressDialog.setStatus("<b>Переход в сетевой режим (on-line)</b>");
         wait(1500);
 
-        /** Авторизация */
+        // Авторизация
         progressDialog.setStatus("<b>Авторизация...</b>");
         if (!Login()) {
             return;
@@ -51,7 +51,7 @@ public class OnlineModeThread extends GameModeThread {
         progressDialog.progressBar.setIndeterminate(false);
         progressDialog.progressBar.setValue(25);
 
-        /** Проверка и загрузка клиента */
+        // Проверка и загрузка клиента
         progressDialog.setStatus("<b>Проверяю наличие клиента...</b>");
         boolean[] checkclient = CheckSumClient(CheckClient());
         if (checkclient[0] && checkclient[1]) {
@@ -283,7 +283,7 @@ public class OnlineModeThread extends GameModeThread {
                     .add("Content-Length", String.valueOf(postdata.toString().length()));
             http.sendRequestHeader();
             req.getBody().write(postdata.toString().getBytes());
-            /** Получаем ответ */
+            // Получаем ответ
             http.getResponse();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             http.autoOutputBody(baos);

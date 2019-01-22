@@ -16,7 +16,7 @@ public class OfflineModeThread extends GameModeThread {
         progressDialog.setStatus("<b>Переход в одиночный режим (off-line)</b>");
         wait(1500);
 
-        /** Проверка наличия клиента */
+        // Проверка наличия клиента
         progressDialog.progressBar.setIndeterminate(false);
         progressDialog.setStatus("<b>Проверяю наличие клиента...</b>");
         boolean[] checkclient = CheckClient();

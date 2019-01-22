@@ -15,25 +15,25 @@ import java.net.URL;
 import java.util.StringJoiner;
 
 @Slf4j
-public abstract class GameModeThread extends Thread {
+abstract class GameModeThread extends Thread {
 
-    protected ProgressDialog progressDialog;
+    ProgressDialog progressDialog;
 
-    public GameModeThread(ProgressDialog parent) {
+    GameModeThread(ProgressDialog parent) {
         this.progressDialog = parent;
     }
 
-    protected void errorMessage(String message) {
+    void errorMessage(String message) {
         this.progressDialog.setStatus("<font color=\"#EE0000\">" + message + "</font>");
     }
 
-    protected static void wait(int milisec) {
+    static void wait(int milisec) {
         try {
             Thread.sleep(milisec);
         } catch (InterruptedException exc) {/**/}
     }
 
-    protected void ReloadLauncher(String session) {
+    void ReloadLauncher(String session) {
 		/*String xmode;
 		if(Config.CONF_X64_MODE){
 			xmode = "-d64";
@@ -69,7 +69,7 @@ public abstract class GameModeThread extends Thread {
         }
     }
 
-    protected static void StartMinecraftApplet(boolean online, String username, String sessId) {
+    static void StartMinecraftApplet(boolean online, String username, String sessId) {
         URL[] jar_urls = new URL[Config.MINECRAFT_JARS.length];
         try {
             for (int i = 0; i < Config.MINECRAFT_JARS.length; i++) {
@@ -100,7 +100,7 @@ public abstract class GameModeThread extends Thread {
 
         JFrame frame = new JFrame();
         frame.setTitle("Minecraft");
-        /** Установка иконки */
+        // Установка иконки
         try {
             frame.setIconImage(ImageIO.read(MainFrame.class.getResource("icon.png")));
         } catch (IOException e) {
@@ -117,10 +117,10 @@ public abstract class GameModeThread extends Thread {
         mineApplet.start();
     }
 
-    protected boolean[] CheckClient() {
+    boolean[] CheckClient() {
         boolean[] existsFile = {true, true};
 
-        /** Проверяем наличие minecraft.jar */
+        // Проверяем наличие minecraft.jar
         File file = new File(Config.MINECRAFT_BINPATH, Config.MINECRAFT_JARS[0]);
         if (!file.exists()) {
             existsFile[0] = false;
@@ -129,7 +129,7 @@ public abstract class GameModeThread extends Thread {
             log.info("File \"{}\" found", file.toString());
         }
 
-        /** Проверяем наличие библиотек */
+        // Проверяем наличие библиотек
         for (int i = 1; i < Config.MINECRAFT_JARS.length; i++) {
             file = new File(Config.MINECRAFT_BINPATH, Config.MINECRAFT_JARS[i]);
             if (!file.exists()) {
