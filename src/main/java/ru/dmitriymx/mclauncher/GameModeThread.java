@@ -1,13 +1,13 @@
 package ru.dmitriymx.mclauncher;
 
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.File;
-import java.net.URL;
 import java.io.IOException;
-import javax.imageio.ImageIO;
-
-import javax.swing.JFrame;
+import java.net.URL;
 
 public abstract class GameModeThread extends Thread {
 	protected ProgressDialog progressDialog;

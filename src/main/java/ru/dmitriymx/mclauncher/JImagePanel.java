@@ -1,10 +1,10 @@
 package ru.dmitriymx.mclauncher;
 
+import javax.swing.JPanel;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-
-import javax.swing.JPanel;
 
 public class JImagePanel extends JPanel {
 	private static final long serialVersionUID = 1L;

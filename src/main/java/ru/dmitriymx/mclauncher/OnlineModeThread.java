@@ -1,5 +1,12 @@
 package ru.dmitriymx.mclauncher;
 
+import ru.dmitriymx.dhttpconnect.DHttpConnection;
+import ru.dmitriymx.dhttpconnect.DPack;
+import ru.dmitriymx.dhttpconnect.DQuery;
+import ru.dmitriymx.dhttpconnect.DRequest;
+import ru.dmitriymx.dhttpconnect.DResponse;
+import ru.dmitriymx.dhttpconnect.DUrl;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -14,13 +21,6 @@ import java.util.Formatter;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import ru.dmitriymx.dhttpconnect.DHttpConnection;
-import ru.dmitriymx.dhttpconnect.DPack;
-import ru.dmitriymx.dhttpconnect.DQuery;
-import ru.dmitriymx.dhttpconnect.DRequest;
-import ru.dmitriymx.dhttpconnect.DResponse;
-import ru.dmitriymx.dhttpconnect.DUrl;
 
 public class OnlineModeThread extends GameModeThread {
 	private String online_name;
