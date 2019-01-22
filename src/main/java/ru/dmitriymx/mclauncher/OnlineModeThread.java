@@ -1,5 +1,6 @@
 package ru.dmitriymx.mclauncher;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.dmitriymx.dhttpconnect.DHttpConnection;
 import ru.dmitriymx.dhttpconnect.DPack;
 import ru.dmitriymx.dhttpconnect.DQuery;
@@ -22,6 +23,7 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+@Slf4j
 public class OnlineModeThread extends GameModeThread {
 
     private String online_name;
@@ -89,7 +91,7 @@ public class OnlineModeThread extends GameModeThread {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             if (resp.getStatus() != 200) {
                 errorMessage("<b>ERROR#2S" + resp.getStatus() + ":</b> <font color='#000000'><i>Ошибка на стороне сервера</i></font>");
-                System.err.println("Start network play: fail.");
+                log.error("Start network play: fail.");
                 http.close();
                 wait(3000);
                 progressDialog.dispose();
@@ -114,8 +116,9 @@ public class OnlineModeThread extends GameModeThread {
             session = value[1];
             return true;
         } catch (Exception e) {
+            log.error("Ошибка в лаунчере", e);
+
             errorMessage("<b>ERROR:</b> <font color='#000000'><i>Ошибка в лаунчере.</i></font>");
-            e.printStackTrace();
             wait(3000);
             progressDialog.dispose();
             return false;
@@ -148,7 +151,7 @@ public class OnlineModeThread extends GameModeThread {
                 http.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Download client", e);
         }
 
         /** Загрузка */
@@ -210,7 +213,7 @@ public class OnlineModeThread extends GameModeThread {
                     File destinationFilePath = new File(Config.MINECRAFT_BINPATH + File.separator + "natives" + File.separator + entry
                             .getName());
                     destinationFilePath.getParentFile().mkdirs();
-                    System.out.println("Extracting " + destinationFilePath);
+                    log.info("Extracting {}", destinationFilePath);
                     InputStream is = zipFile.getInputStream(entry);
                     fos = new FileOutputStream(destinationFilePath);
                     while ((n = is.read(buffer)) > 0) {
@@ -230,7 +233,7 @@ public class OnlineModeThread extends GameModeThread {
 
         /** Подсчитываем MD5 сумму для minecraft.jar */
         if (check[0]) {
-            System.out.println("Minecraft MD5...");
+            log.info("Minecraft MD5...");
             postdata.append(getMD5(new File(Config.MINECRAFT_BINPATH, Config.MINECRAFT_JARS[0])));
         } else {
             postdata.append("0");
@@ -238,7 +241,7 @@ public class OnlineModeThread extends GameModeThread {
 
         /** Подсчитываем CRC32 сумму для библиотек */
         if (check[1]) {
-            System.out.println("Libs CRC32...");
+            log.info("Libs CRC32...");
             CRC32 crc32 = new CRC32();
             byte[] buff = new byte[65536];
             int n;
@@ -251,7 +254,7 @@ public class OnlineModeThread extends GameModeThread {
                     }
                     fis.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("write check sum", e);
                     crc32 = null;
                     break;
                 }
@@ -289,7 +292,7 @@ public class OnlineModeThread extends GameModeThread {
             }
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("send data to server", e);
             return new boolean[]{false, false};
         }
     }
@@ -312,7 +315,7 @@ public class OnlineModeThread extends GameModeThread {
 
             return formatter.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("get md5", e);
         }
         return null;
     }

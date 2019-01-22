@@ -1,5 +1,7 @@
 package ru.dmitriymx.mclauncher;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
@@ -8,7 +10,9 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.StringJoiner;
 
+@Slf4j
 public abstract class GameModeThread extends Thread {
 
     protected ProgressDialog progressDialog;
@@ -49,14 +53,17 @@ public abstract class GameModeThread extends Thread {
                 "-Dsun.java2d.pmoffscreen=false",
                 "-jar", System.getProperty("java.class.path")};
         try {
-            System.out.println("Start Minecraft [restart]");
-            System.out.print("Java params: ");
+            log.info("Start Minecraft [restart]");
+
+            StringJoiner sj = new StringJoiner(" ").add("Java params: ");
             for (String prm : cmd) {
-                System.out.print(prm + " ");
+                sj.add(prm);
             }
+            log.info(sj.toString());
+
             Runtime.getRuntime().exec(cmd);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Reload launcher", e);
         }
     }
 
@@ -66,7 +73,9 @@ public abstract class GameModeThread extends Thread {
             for (int i = 0; i < Config.MINECRAFT_JARS.length; i++) {
                 jar_urls[i] = new File(Config.MINECRAFT_BINPATH, Config.MINECRAFT_JARS[i]).toURI().toURL();
             }
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            log.error("", e);
+        }
 
         MinecraftApplet mineApplet = new MinecraftApplet(Config.MINECRAFT_BINPATH, jar_urls);
         mineApplet.customParameters.put("stand-alone", "true");
@@ -93,7 +102,7 @@ public abstract class GameModeThread extends Thread {
         try {
             frame.setIconImage(ImageIO.read(MainFrame.class.getResource("icon.png")));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Ошибка при установки иконки", e);
         }
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,24 +120,22 @@ public abstract class GameModeThread extends Thread {
 
         /** Проверяем наличие minecraft.jar */
         File file = new File(Config.MINECRAFT_BINPATH, Config.MINECRAFT_JARS[0]);
-        System.out.print("Check file \"" + file.toString() + "\"... ");
         if (!file.exists()) {
             existsFile[0] = false;
-            System.out.println("[ not found ]");
+            log.info("File \"{}\" not found", file.toString());
         } else {
-            System.out.println("[ found ]");
+            log.info("File \"{}\" found", file.toString());
         }
 
         /** Проверяем наличие библиотек */
         for (int i = 1; i < Config.MINECRAFT_JARS.length; i++) {
             file = new File(Config.MINECRAFT_BINPATH, Config.MINECRAFT_JARS[i]);
-            System.out.print("Check file \"" + file.toString() + "\"... ");
             if (!file.exists()) {
                 existsFile[1] = false;
-                System.out.println("[ not found ]");
+                log.info("File \"{}\" not found", file.toString());
                 break;
             } else {
-                System.out.println("[ found ]");
+                log.info("File \"{}\" found", file.toString());
             }
         }
 

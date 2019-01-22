@@ -1,39 +1,41 @@
 package ru.dmitriymx.mclauncher;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Main {
 
     public static void main(String[] args) {
         Config.init();
 
+        DbgView();
+
         /** Основная программа */
         String param = System.getProperty("sess");
         if (param == null) {
-            Config.ChangeSTDOUT("launcher.log");
-            DbgView();
-            System.out.println("Start Launcher");
+            log.info("Start Launcher");
+
             MainFrame mf = new MainFrame();
             mf.setVisible(true);
         } else {
-            Config.ChangeSTDOUT("client.log");
-            DbgView();
-            System.out.println("Start Minecraft");
+            log.info("Start Minecraft");
+
             String[] name_sess = param.split(":", 2);
             boolean mode;
             if (name_sess[1].equalsIgnoreCase("0000")) {
                 mode = false;
-                System.out.println("Offline mode");
+                log.info("Offline mode");
             } else {
                 mode = true;
-                System.out.println("Online mode");
+                log.info("Online mode");
             }
             GameModeThread.StartMinecraftApplet(mode, name_sess[0], name_sess[1]);
         }
     }
 
     private static void DbgView() {
-        if (System.getProperty("debug", "false").equalsIgnoreCase("true")) {
-            java.util.Set<Object> keySet = System.getProperties().keySet();
-            for (Object key : keySet) {System.out.println((String) key + " = " + System.getProperty((String) key));}
+        if (Boolean.getBoolean(System.getProperty("debug", "false"))) {
+            System.getProperties().forEach((key, value) -> log.debug("{} = {}", key, value));
         }
     }
 

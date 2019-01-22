@@ -1,12 +1,15 @@
 package ru.dmitriymx.mclauncher;
 
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
+@Slf4j
 public class Config {
 
     public static final int LAUNCHER_VERSION = 13; // 11-05-2012 17:46
@@ -61,23 +64,6 @@ public class Config {
     }
 
     /**
-     * Перенаправление вывода
-     */
-    public static void ChangeSTDOUT(String log_file) {
-        try {
-            java.io.File log = new java.io.File(Config.MINECRAFT_PATH, log_file);
-            if (!log.getParentFile().exists()) {
-                log.getParentFile().mkdirs();
-            }
-            java.io.PrintStream ps = new java.io.PrintStream(log);
-            System.setErr(ps);
-            System.setOut(ps);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Загрузка параметров
      */
     public static void LoadConf() {
@@ -110,7 +96,7 @@ public class Config {
             }
             buff.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Load config", e);
         }
     }
 
@@ -136,7 +122,7 @@ public class Config {
 			}*/
             buff.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Save config", e);
         }
     }
 }

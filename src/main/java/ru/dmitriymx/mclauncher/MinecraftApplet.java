@@ -1,5 +1,7 @@
 package ru.dmitriymx.mclauncher;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
@@ -12,6 +14,7 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class MinecraftApplet extends Applet implements Runnable, AppletStub, MouseListener {
 
     private static final long serialVersionUID = 1L;
@@ -97,7 +100,7 @@ public class MinecraftApplet extends Applet implements Runnable, AppletStub, Mou
             this.active = true;
             validate();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Загрузка апплета", e);
         }
     }
 
@@ -150,7 +153,7 @@ public class MinecraftApplet extends Applet implements Runnable, AppletStub, Mou
         try {
             return new URL("http://www.minecraft.net/game/");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error("magic not work =(", e);
         }
         return null;
     }

@@ -1,5 +1,7 @@
 package ru.dmitriymx.mclauncher;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+@Slf4j
 public class MainFrame extends JFrame {
 
     private static final long serialVersionUID = 315700492771857153L;
@@ -37,8 +40,7 @@ public class MainFrame extends JFrame {
         try {
             setIconImage(ImageIO.read(MainFrame.class.getResource("icon.png")));
         } catch (IOException e) {
-            System.err.println("ERROR#1: Сбой при чтении изображения иконки.");
-            e.printStackTrace();
+            log.error("ERROR#1: Сбой при чтении изображения иконки", e);
         }
 
         /** Базовая панель с логотипом */
@@ -61,8 +63,7 @@ public class MainFrame extends JFrame {
         try {
             image = ImageIO.read(MainFrame.class.getResource("logo.png"));
         } catch (Exception e) {
-            System.err.println("ERROR#2: Сбой при чтении изображения логотипа.");
-            e.printStackTrace();
+            log.error("ERROR#2: Сбой при чтении изображения логотипа", e);
         }
         JImagePanel logo = new JImagePanel(image);
         logo.setLayout(null);

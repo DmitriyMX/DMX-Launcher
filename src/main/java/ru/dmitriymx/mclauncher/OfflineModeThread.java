@@ -1,5 +1,8 @@
 package ru.dmitriymx.mclauncher;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class OfflineModeThread extends GameModeThread {
 
     public OfflineModeThread(ProgressDialog parent) {
@@ -18,14 +21,14 @@ public class OfflineModeThread extends GameModeThread {
         boolean[] checkclient = CheckClient();
         if (!checkclient[0]) {
             errorMessage("<b>ERROR#2:</b> <font color='#000000'><i>Отсутствует minecraft.jar.</i></font>");
-            System.err.println("Start single play: fail.");
+            log.error("Start single play: fail.");
             wait(3000);
             progressDialog.dispose();
             return;
         }
         if (!checkclient[1]) {
             errorMessage("<b>ERROR#3:</b> <font color='#000000'><i>Отсутствуют все или часть библиотек.</i></font>");
-            System.err.println("Start single play: fail.");
+            log.error("Start single play: fail.");
             wait(3000);
             progressDialog.dispose();
             return;
@@ -33,7 +36,7 @@ public class OfflineModeThread extends GameModeThread {
         progressDialog.SetStatus("<b><font color='#008800'>Клиент на месте.</font></b>");
         wait(500);
         progressDialog.SetStatus("<b>Запускаю Minecraft...</b>");
-        System.out.println("Start Minecraft [restart]");
+        log.info("Start Minecraft [restart]");
         ReloadLauncher(progressDialog.parent.loginEdit.getText() + ":0000");
         wait(1000);
         progressDialog.dispose();
