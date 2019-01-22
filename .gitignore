@@ -12,6 +12,6 @@ bin/
 .classpath
 .project
 
-## OTHER ##
-lib/
+## MAVEN ##
+target/
 
