@@ -1,0 +1,17 @@
+## IDEA ##
+.idea/
+out/
+*.iml
+*.ipr
+*.iws
+*.ids
+
+## ECLIPSE ##
+.settings/
+bin/
+.classpath
+.project
+
+## OTHER ##
+lib/
+
