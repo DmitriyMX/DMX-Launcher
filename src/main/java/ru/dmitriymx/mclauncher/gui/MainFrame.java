@@ -70,10 +70,10 @@ public class MainFrame extends JFrame {
         return logo;
     }
 
-    private JLabel createLabel(String label, int x, int y, int width, int height) {
+    private JLabel createLabel(String label, int x) {
         JLabel jLabel = new JLabel(label);
         jLabel.setForeground(Color.WHITE);
-        jLabel.setBounds(x, y, width, height);
+        jLabel.setBounds(x, 14, 45, 14);
 
         return jLabel;
     }
@@ -103,7 +103,7 @@ public class MainFrame extends JFrame {
         }
         panel.add(serverBox);
 
-        panel.add(createLabel("Логин", 249, 14, 45, 14));
+        panel.add(createLabel("Логин", 249));
 
         // Поле логина
         loginEdit = new JTextField();
@@ -114,7 +114,7 @@ public class MainFrame extends JFrame {
         loginEdit.setText(Config.CONF_LAST_LOGIN);
         panel.add(loginEdit);
 
-        panel.add(createLabel("Пароль", 404, 14, 45, 14));
+        panel.add(createLabel("Пароль", 404));
 
         /*
          * Событие, срабатывающее, когда нажимается кнопка ENTER
