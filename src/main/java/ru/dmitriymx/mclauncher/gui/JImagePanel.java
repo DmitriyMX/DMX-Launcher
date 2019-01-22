@@ -1,4 +1,4 @@
-package ru.dmitriymx.mclauncher;
+package ru.dmitriymx.mclauncher.gui;
 
 import javax.swing.JPanel;
 
@@ -11,7 +11,7 @@ public class JImagePanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private Image img;
 
-    public JImagePanel(Image image) {
+    JImagePanel(Image image) {
         this.img = image;
         Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
         setPreferredSize(size);

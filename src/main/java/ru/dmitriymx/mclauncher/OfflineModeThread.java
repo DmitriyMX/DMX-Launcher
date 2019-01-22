@@ -1,6 +1,7 @@
 package ru.dmitriymx.mclauncher;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.dmitriymx.mclauncher.gui.ProgressDialog;
 
 @Slf4j
 public class OfflineModeThread extends GameModeThread {
@@ -12,12 +13,12 @@ public class OfflineModeThread extends GameModeThread {
     @Override
     public void run() {
         progressDialog.progressBar.setIndeterminate(true);
-        progressDialog.SetStatus("<b>Переход в одиночный режим (off-line)</b>");
+        progressDialog.setStatus("<b>Переход в одиночный режим (off-line)</b>");
         wait(1500);
 
         /** Проверка наличия клиента */
         progressDialog.progressBar.setIndeterminate(false);
-        progressDialog.SetStatus("<b>Проверяю наличие клиента...</b>");
+        progressDialog.setStatus("<b>Проверяю наличие клиента...</b>");
         boolean[] checkclient = CheckClient();
         if (!checkclient[0]) {
             errorMessage("<b>ERROR#2:</b> <font color='#000000'><i>Отсутствует minecraft.jar.</i></font>");
@@ -33,9 +34,9 @@ public class OfflineModeThread extends GameModeThread {
             progressDialog.dispose();
             return;
         }
-        progressDialog.SetStatus("<b><font color='#008800'>Клиент на месте.</font></b>");
+        progressDialog.setStatus("<b><font color='#008800'>Клиент на месте.</font></b>");
         wait(500);
-        progressDialog.SetStatus("<b>Запускаю Minecraft...</b>");
+        progressDialog.setStatus("<b>Запускаю Minecraft...</b>");
         log.info("Start Minecraft [restart]");
         ReloadLauncher(progressDialog.parent.loginEdit.getText() + ":0000");
         wait(1000);

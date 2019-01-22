@@ -1,9 +1,11 @@
-package ru.dmitriymx.mclauncher;
+package ru.dmitriymx.mclauncher.gui;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import ru.dmitriymx.mclauncher.OfflineModeThread;
+import ru.dmitriymx.mclauncher.OnlineModeThread;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -23,11 +25,13 @@ import java.awt.event.ComponentEvent;
 public class ProgressDialog extends JDialog {
 
     private static final long serialVersionUID = -5183025364792106378L;
+
+    private JLabel status;
+
     public JProgressBar progressBar;
-    public JLabel status;
     public MainFrame parent;
 
-    public ProgressDialog(MainFrame parent) {
+    ProgressDialog(MainFrame parent) {
         super(parent, true);
         this.parent = parent;
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -37,7 +41,7 @@ public class ProgressDialog extends JDialog {
         setResizable(false);
         setTitle("progress");
 
-        /** Добовляется событие вида "onShow" */
+        // Добовляется событие вида "onShow"
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent paramComponentEvent) {
@@ -49,7 +53,7 @@ public class ProgressDialog extends JDialog {
             }
         });
 
-        /** Базовая панель */
+        // Базовая панель
         JPanel panel = new JPanel();
         panel.setBorder(new LineBorder(new Color(0, 0, 0)));
         panel.setLayout(new FormLayout(
@@ -65,17 +69,16 @@ public class ProgressDialog extends JDialog {
                         FormFactory.RELATED_GAP_ROWSPEC,}));
         getContentPane().add(panel, BorderLayout.CENTER);
 
-        /** Прогресс бар */
+        // Прогресс бар
         progressBar = new JProgressBar();
         progressBar.setValue(25);
         progressBar.setForeground(UIManager.getColor("ProgressBar.foreground"));
         panel.add(progressBar, "2, 2, fill, fill");
 
-        /** Статус-строка */
-        String str = "<html><center><font color=\"#000000\">STATUS LINE</font></center></html>";
+        // Статус-строка
         status = new JLabel();
         status.setForeground(Color.BLACK);
-        status.setText(str);
+        status.setText("<html><center><font color=\"#000000\">STATUS LINE</font></center></html>");
         status.setFont(new Font("Dialog", Font.PLAIN, 12));
         panel.add(status, "2, 4, center, center");
 
@@ -83,7 +86,7 @@ public class ProgressDialog extends JDialog {
         setLocationRelativeTo(null);
     }
 
-    public void SetStatus(String text) {
+    public void setStatus(String text) {
         status.setText("<html><center>" + text + "</center></html>");
     }
 }

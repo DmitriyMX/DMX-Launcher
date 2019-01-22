@@ -7,6 +7,7 @@ import ru.dmitriymx.dhttpconnect.DQuery;
 import ru.dmitriymx.dhttpconnect.DRequest;
 import ru.dmitriymx.dhttpconnect.DResponse;
 import ru.dmitriymx.dhttpconnect.DUrl;
+import ru.dmitriymx.mclauncher.gui.ProgressDialog;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,11 +37,11 @@ public class OnlineModeThread extends GameModeThread {
     @Override
     public void run() {
         progressDialog.progressBar.setIndeterminate(true);
-        progressDialog.SetStatus("<b>Переход в сетевой режим (on-line)</b>");
+        progressDialog.setStatus("<b>Переход в сетевой режим (on-line)</b>");
         wait(1500);
 
         /** Авторизация */
-        progressDialog.SetStatus("<b>Авторизация...</b>");
+        progressDialog.setStatus("<b>Авторизация...</b>");
         if (!Login()) {
             return;
         }
@@ -49,19 +50,19 @@ public class OnlineModeThread extends GameModeThread {
         progressDialog.progressBar.setValue(25);
 
         /** Проверка и загрузка клиента */
-        progressDialog.SetStatus("<b>Проверяю наличие клиента...</b>");
+        progressDialog.setStatus("<b>Проверяю наличие клиента...</b>");
         boolean[] checkclient = CheckSumClient(CheckClient());
         if (checkclient[0] && checkclient[1]) {
-            progressDialog.SetStatus("<b><font color='#008800'>Клиент на месте.</font></b>");
+            progressDialog.setStatus("<b><font color='#008800'>Клиент на месте.</font></b>");
             wait(500);
         } else {
             DownloadClient(checkclient);
-            progressDialog.SetStatus("<b><font color='#008800'>Клиент загружен.</font></b>");
+            progressDialog.setStatus("<b><font color='#008800'>Клиент загружен.</font></b>");
             wait(500);
         }
         progressDialog.progressBar.setValue(75);
 
-        progressDialog.SetStatus("<b>Запускаю Minecraft...</b>");
+        progressDialog.setStatus("<b>Запускаю Minecraft...</b>");
         progressDialog.progressBar.setValue(100);
         ReloadLauncher(online_name + ":" + session);
         wait(1000);
@@ -162,7 +163,7 @@ public class OnlineModeThread extends GameModeThread {
         try {
             for (int i = 0; i < Config.MINECRAFT_JARS.length; i++) {
                 if (((!check[0]) && (i == 0)) || ((!check[1]) && (i > 0))) {
-                    progressDialog.SetStatus("<b>Загрузка: </b>" + Config.MINECRAFT_JARS[i] + " ...");
+                    progressDialog.setStatus("<b>Загрузка: </b>" + Config.MINECRAFT_JARS[i] + " ...");
                     http = new DHttpConnection(new DUrl(Config.URL_CLIENT + Config.MINECRAFT_JARS[i]));
                     http.getRequest().setMethod("GET");
                     http.sendRequestHeader();
@@ -184,7 +185,7 @@ public class OnlineModeThread extends GameModeThread {
                 }
             }
             if (!check[1]) {
-                progressDialog.SetStatus("<b>Загрузка: </b>" + Config.NATIVE_LIBRARY + " ...");
+                progressDialog.setStatus("<b>Загрузка: </b>" + Config.NATIVE_LIBRARY + " ...");
                 http = new DHttpConnection(new DUrl(Config.URL_CLIENT + Config.NATIVE_LIBRARY));
                 http.getRequest().setMethod("GET");
                 http.sendRequestHeader();
@@ -204,7 +205,7 @@ public class OnlineModeThread extends GameModeThread {
                 fos.close();
                 http.close();
 
-                progressDialog.SetStatus("<b>Распаковка: </b>" + Config.NATIVE_LIBRARY + " ...");
+                progressDialog.setStatus("<b>Распаковка: </b>" + Config.NATIVE_LIBRARY + " ...");
                 ZipFile zipFile = new ZipFile(file, 1);
                 @SuppressWarnings("rawtypes")
                 Enumeration zipFileEntries = zipFile.entries();

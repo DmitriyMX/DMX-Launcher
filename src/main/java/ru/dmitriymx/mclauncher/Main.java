@@ -1,6 +1,7 @@
 package ru.dmitriymx.mclauncher;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.dmitriymx.mclauncher.gui.MainFrame;
 
 @Slf4j
 public class Main {

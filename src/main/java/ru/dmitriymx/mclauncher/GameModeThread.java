@@ -1,6 +1,8 @@
 package ru.dmitriymx.mclauncher;
 
 import lombok.extern.slf4j.Slf4j;
+import ru.dmitriymx.mclauncher.gui.MainFrame;
+import ru.dmitriymx.mclauncher.gui.ProgressDialog;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -22,7 +24,7 @@ public abstract class GameModeThread extends Thread {
     }
 
     protected void errorMessage(String message) {
-        this.progressDialog.SetStatus("<font color=\"#EE0000\">" + message + "</font>");
+        this.progressDialog.setStatus("<font color=\"#EE0000\">" + message + "</font>");
     }
 
     protected static void wait(int milisec) {
