@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.StringJoiner;
 
+@Deprecated
 @Slf4j
 abstract class GameModeThread extends Thread {
 

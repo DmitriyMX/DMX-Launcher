@@ -26,7 +26,7 @@ public class Config {
 
     static String NATIVE_LIBRARY;
     private static String MINECRAFT_PATH;
-    static String MINECRAFT_BINPATH;
+    public static String MINECRAFT_BINPATH;
 
     public static int CONF_SERVER_ID = 0;
     public static String CONF_LAST_LOGIN = "";

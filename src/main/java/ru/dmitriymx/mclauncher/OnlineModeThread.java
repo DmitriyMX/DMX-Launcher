@@ -26,6 +26,7 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+@Deprecated
 @Slf4j
 public class OnlineModeThread extends GameModeThread {
 
