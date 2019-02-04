@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class GuiApp extends Application {
     private static final String LAUNCHER_VERSION = "v0.8.0 b1";
@@ -23,6 +24,8 @@ public class GuiApp extends Application {
         primaryStage.setTitle("DmitriyMX Minecraft Server [" + LAUNCHER_VERSION + "]");
         primaryStage.setScene(new Scene(root));
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+        primaryStage.setResizable(false);
+        primaryStage.sizeToScene();
         primaryStage.show();
     }
 }
