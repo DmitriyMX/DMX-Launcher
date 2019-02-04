@@ -16,8 +16,8 @@ public class Config {
     private static final String WORK_DIR = "dmitriymx";
 
     static final String URL_CLIENT = "http://mc.dy9.ru/client/";
-    static final String URL_AUTH = "http://mc.dy9.ru:9001/auth.mc";
-    static final String URL_MINE_CHECK = "http://mc.dy9.ru:9001/checkmine.mc";
+    public static final String URL_AUTH = "http://mc.dy9.ru:9001/auth.mc";
+    public static final String URL_MINE_CHECK = "http://mc.dy9.ru:9001/checkmine.mc";
 
     static final String[] MINECRAFT_JARS = {"minecraft.jar", "lwjgl.jar", "lwjgl_util.jar", "jinput.jar"};
 

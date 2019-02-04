@@ -5,9 +5,9 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import ru.dmitriymx.mclauncher.Config;
-import ru.dmitriymx.mclauncher.OnlineModeThread;
-import ru.dmitriymx.mclauncher.service.ClientCheckService;
+import ru.dmitriymx.mclauncher.service.AbstractClientCheckService;
 import ru.dmitriymx.mclauncher.service.GuiOfflineClientCheckService;
+import ru.dmitriymx.mclauncher.service.GuiOnlineClientCheckService;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -48,14 +48,17 @@ public class ProgressDialog extends JDialog {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent paramComponentEvent) {
+                AbstractClientCheckService checkService;
                 if (ProgressDialog.this.parent.passwdEdit.getPassword().length == 0) {
-                    final ClientCheckService checkService = new GuiOfflineClientCheckService(
+                    checkService = new GuiOfflineClientCheckService(
                             Paths.get(Config.MINECRAFT_BINPATH),
                             ProgressDialog.this);
-                    (new Thread(checkService::check, "Offline check client Thread")).start();
                 } else {
-                    new OnlineModeThread(ProgressDialog.this).start();
+                    checkService = new GuiOnlineClientCheckService(
+                            Paths.get(Config.MINECRAFT_BINPATH),
+                            ProgressDialog.this);
                 }
+                (new Thread(checkService::check, "Check client Thread")).start();
             }
         });
 

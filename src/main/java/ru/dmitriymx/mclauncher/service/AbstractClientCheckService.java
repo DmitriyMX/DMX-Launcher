@@ -14,19 +14,19 @@ import static ru.dmitriymx.mclauncher.service.ClientCheckResult.ErrorType.IS_NOT
 
 @Slf4j
 @RequiredArgsConstructor
-public abstract class ClientCheckService {
+public abstract class AbstractClientCheckService {
 
-    private final static List<String> $jarList = unmodifiableList(asList("minecraft.jar",
-                                                                         "lwjgl.jar",
-                                                                         "lwjgl_util.jar",
-                                                                         "jinput.jar"));
+    final static List<String> jarList = unmodifiableList(asList("minecraft.jar",
+                                                                          "lwjgl.jar",
+                                                                          "lwjgl_util.jar",
+                                                                          "jinput.jar"));
 
     private final Path rootPath;
 
     ClientCheckResult checkClient() {
         ClientCheckResult result = new ClientCheckResult();
 
-        $jarList.forEach(jar -> {
+        jarList.forEach(jar -> {
             log.debug("check {}", jar);
 
             final File file = rootPath.resolve(jar).toFile();

@@ -33,7 +33,8 @@ class ClientCheckResult {
     @Getter
     public enum ErrorType {
         FILE_NOT_FOUND(2, "файл не найден"),
-        IS_NOT_A_FILE(3, "не является файлом");
+        IS_NOT_A_FILE(3, "не является файлом"),
+        INCORRECT_CHECKSUM(4, "некорректная проверочная сумма");
 
         private final int code;
         private final String message;
