@@ -2,6 +2,7 @@ package ru.dmitriymx.mclauncher;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.dmitriymx.mclauncher.gui.MainFrame;
+import ru.dmitriymx.mclauncher.gui2.GuiApp;
 
 @Slf4j
 public class Main {
@@ -16,8 +17,10 @@ public class Main {
         if (param == null) {
             log.info("Start Launcher");
 
-            MainFrame mf = new MainFrame();
-            mf.setVisible(true);
+//            MainFrame mf = new MainFrame();
+//            mf.setVisible(true);
+            GuiApp guiApp = new GuiApp();
+            guiApp.launchApp(args);
         } else {
             log.info("Start Minecraft");
 
